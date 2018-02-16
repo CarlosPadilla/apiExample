@@ -1,0 +1,29 @@
+
+version: '3.3'
+services:
+
+    web:
+        build : ./
+        container_name: revelApi
+        restart: always
+        privileged: true
+        ports:
+          - "9000:9000"
+        links:
+          - db
+        volumes:
+          - ./go-revel-rest:/go/src/go-revel-rest
+
+    db:
+        image: postgres:10
+        restart: always
+        environment:
+            POSTGRES_DB: apiDB
+            POSTGRES_PASSWORD: api
+            POSTGRES_USER: api
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+          - 8090:8080
