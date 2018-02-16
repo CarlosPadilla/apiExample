@@ -1,0 +1,13 @@
+.git/*
+.env
+build/
+api1/build/
+api2/config/local.php
+api1/config/local.php
+api2/config/console-local.php
+api1/config/console-local.php
+api2/runtime/
+api1/runtime/
+api2/web/assets/
+vendor/
+var/
