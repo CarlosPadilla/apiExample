@@ -1,11 +1,7 @@
 package app
 
 import (
-	"go-revel-rest/app/models"
-	rgorp "github.com/revel/modules/orm/gorp/app"
 	"github.com/revel/revel"
-	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/gorp.v2"
 )
 
 func init() {
@@ -24,41 +20,9 @@ func init() {
 		revel.CompressFilter,          // Compress the result.
 		revel.ActionInvoker,           // Invoke the action.
 	}
-	revel.OnAppStart(func() {
-		Dbm := rgorp.Db.Map
-		setColumnSizes := func(t *gorp.TableMap, colSizes map[string]int) {
-			for col, size := range colSizes {
-				t.ColMap(col).MaxSize = size
-			}
-		}
 
-		t := Dbm.AddTable(models.User{}).SetKeys(true, "UserId")
-		// t.ColMap("Password").Transient = true
-		setColumnSizes(t, map[string]int{
-			"UserId": 20,
-			"Name": 100,
-			"Email": 20,
-			"Username": 20,
-			"Password": 20,
-			"HashedPassword": 255,
-		})
-
-		rgorp.Db.TraceOn(revel.AppLog)
-		Dbm.CreateTablesIfNotExists()
-
-		bcryptPassword, _ := bcrypt.GenerateFromPassword([]byte("demo"), bcrypt.DefaultCost)
-		demoUser := &models.User{
-			Name: "Demo User",
-			Email: "demo@demo.com",
-			Username: "demo",
-			Password: "demo",
-			HashedPassword: bcryptPassword,
-			}
-		if err := Dbm.Insert(demoUser); err != nil {
-			panic(err)
-		}
-
-	}, 5)
+	// revel.OnAppStart(ExampleStartupScript)
+	// revel.OnAppStart(InitDB)
 }
 
 var HeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
@@ -68,4 +32,12 @@ var HeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
 	c.Response.Out.Header().Add("X-Content-Type-Options", "nosniff")
 
 	fc[0](c, fc[1:]) // Execute the next filter stage.
+}
+
+func ExampleStartupScript() {
+	// // revel.DevMod and revel.RunMode work here
+	// // Use this script to check for dev mode and set dev/prod startup scripts here!
+	// if revel.DevMode == true {
+	// 	// Dev mode
+	// }
 }

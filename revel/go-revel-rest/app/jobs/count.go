@@ -3,20 +3,23 @@ package jobs
 import (
 	"fmt"
 	"github.com/revel/revel"
-
 	"github.com/revel/modules/jobs/app/jobs"
-	"github.com/revel/modules/orm/gorp/app"
+	gorm "github.com/revel/modules/orm/gorm/app"
 )
 
+
 // Periodically count the users in the database.
-type UserCounter struct{}
+type UserCounter struct{
+}
 
 func (c UserCounter) Run() {
-	users, err := gorp.Db.Map.SelectInt(`SELECT count(*) FROM "User"`)
-	if err != nil {
-		fmt.Println(err)
+
+	var count1 int64
+	gorm.DB.Table("users").Count(&count1)
+	if count1 <= 0 {
+		fmt.Println("Should find some users")
 	}
-	fmt.Printf("There are %d users.\n", users)
+	fmt.Printf("There are %d users.\n", count1)
 }
 
 func init() {

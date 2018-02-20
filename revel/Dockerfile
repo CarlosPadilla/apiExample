@@ -14,8 +14,7 @@ WORKDIR /go
 # Install go libraries
 RUN go get github.com/revel/revel
 RUN go get github.com/revel/cmd/revel
-RUN go get -u github.com/lib/pq
-RUN go get -u github.com/go-gorp/gorp
+RUN go get -u github.com/go-gorp/gorm
 
 CMD ["/go/bin/revel", "run", "go-revel-rest"]
 

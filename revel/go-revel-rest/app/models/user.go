@@ -1,47 +1,22 @@
 package models
 
 import (
-	"fmt"
-	"github.com/revel/revel"
-	"regexp"
+	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
+// User model
 type User struct {
-	UserId             int64 `db:"UserId" json:"UserId"`
-	Name               string `db:"Name" json:"Name"`
-	Email              string `db:"Email" json:"Email"`
-	Username           string `db:"Username" json:"Username"`
-	Password           string `db:"Password" json:"Password"`
-	HashedPassword     []byte `db:"HashedPassword" json:"HashedPassword"`
+	gorm.Model
+	Username           string `gorm:"size:255" `
+	Name           string `gorm:"size:255" `
+	Email          string `gorm:"type:varchar(100);unique_index" `
+	Active         bool
+	HashedPassword []byte
 }
 
-func (u *User) String() string {
-	return fmt.Sprintf("User(%s)", u.Username)
-}
-
-var userRegex = regexp.MustCompile("^\\w*$")
-
-func (user *User) Validate(v *revel.Validation) {
-	v.Check(user.Username,
-		revel.Required{},
-		revel.MaxSize{15},
-		revel.MinSize{4},
-		revel.Match{userRegex},
-	)
-
-	ValidatePassword(v, user.Password).
-		Key("user.password")
-
-	v.Check(user.Name,
-		revel.Required{},
-		revel.MaxSize{100},
-	)
-}
-
-func ValidatePassword(v *revel.Validation, password string) *revel.ValidationResult {
-	return v.Check(password,
-		revel.Required{},
-		revel.MaxSize{15},
-		revel.MinSize{5},
-	)
+// SetNewPassword set a new hashsed password to user
+func (user *User) SetNewPassword(passwordString string) {
+	bcryptPassword, _ := bcrypt.GenerateFromPassword([]byte(passwordString), bcrypt.DefaultCost)
+	user.HashedPassword = bcryptPassword
 }
