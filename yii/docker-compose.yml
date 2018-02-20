@@ -20,10 +20,11 @@ services:
 
     db:
         image: postgres:10
+        container_name: dbApi
         restart: always
         environment:
             POSTGRES_PASSWORD: api
-            POSTGRES_DB: api
+            POSTGRES_DB: apiDB
             POSTGRES_USER: api
 
     adminer:

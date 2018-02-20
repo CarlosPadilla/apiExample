@@ -3,7 +3,7 @@ return [
     'components' => [
         'db'     => [
             'class'    => 'yii\db\Connection',
-            'dsn'      => 'pgsql:host=db;port=5432;dbname=api',
+            'dsn'      => 'pgsql:host=db;port=5432;dbname=apiDB',
             'username' => 'api',
             'password' => 'api',
             'charset'  => 'UTF8',
