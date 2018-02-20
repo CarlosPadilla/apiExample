@@ -10,7 +10,7 @@ services:
         sysctls:
           net.ipv4.ip_unprivileged_port_start: 0
         ports:
-          - "8080:80"
+          - "9000:80"
         links:
           - db
         volumes:
